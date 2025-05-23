@@ -1,0 +1,31 @@
+# Environment variables
+.env
+
+# Virtual environment
+venv/
+/venv
+ENV/
+env/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Distribution / packaging
+dist/
+build/
+*.egg-info/
+
+# IDE
+.vscode/
+.idea/
+
+# Misc
+.DS_Store 
+
+/AppData/
+/Documents/
+/Downloads/
+/OneDrive/
+/*.DAT
