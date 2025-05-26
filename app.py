@@ -60,7 +60,7 @@ def chat_ai(user_message):
     
     🎯 Response Guidelines:
     Please write a full, natural-sounding reply from Usman Hassan that includes:
-    Polite acknowledgment and thanks for the client’s message
+    Polite acknowledgment and thanks for the client's message
     A direct and thoughtful response to their question or comment
     Reference to the original proposal, as relevant.
     Dont make it too long.because it will be sent via Upwork.
@@ -70,7 +70,7 @@ def chat_ai(user_message):
     Maintain a friendly, confident, and professional tone
     Provide technical clarity if the question involves tools, frameworks, or strategy
     Keep your response concise but complete
-    If you don’t know something, be honest but offer an alternative or next step
+    If you don't know something, be honest but offer an alternative or next step
     Do not repeat the entire proposal, but build naturally on what was said
     ✅ Output Format:
     Return a complete client message with proper paragraph structure, no extra commentary, and ready to be sent via Upwork.
@@ -82,95 +82,29 @@ def chat_ai(user_message):
     except Exception as e:
         return f"Error generating chat response: {str(e)}"
 
-def proposal_generator(job_post, company_name, client_name, uploaded_file):
-    # Extract resume text if uploaded
+def proposal_generator(job_post, company_name, client_name, uploaded_file, is_milestone, project_amount=None):
     resume_text = load_resume(uploaded_file)
-
-    # Craft the strategic prompt
+    milestone_instructions = ""
+    if is_milestone == "Yes":
+        milestone_instructions = f"""
+        \n\n---\n### Project Milestones\nPlease generate a milestone breakdown with:\n- Milestone description\n- Estimated completion date\n- Amount for each milestone\n- The total project budget is ${project_amount if project_amount else '[not specified]'}\nUse your expertise to suggest a logical breakdown.\n---\n"""
     prompt = f"""
-    You are a top-rated Upwork freelancer and expert copywriter with a strong track record of winning high-value freelance jobs.
-Your goal is to craft a powerful, personalized proposal for the following opportunity using persuasive storytelling, credibility, and client-focused messaging.
-    Context:
-    - Job Post: {job_post}
-    - Company: {company_name if company_name else 'Not specified'}
-    - Client Name: {client_name if client_name else 'Hiring Manager'}
-    - My Name: Usman Hassan
-    - My Background: {resume_text if resume_text else 'Will be customized based on relevant experience'}
-    📝 Proposal Structure:
-    Your response should follow this structure:
-    🔥 Hook / Introduction
-    Open with a powerful sentence that immediately shows understanding of the client’s problem and goals.
-    ✅ Demonstrated Expertise
-    Share specific skills, projects, and experience relevant to the job (use bullet points sparingly for clarity).
-    🎯 Targeted Fit & Alignment
-    Address specific job requirements and how your expertise will solve them — mention tools, technologies, or strategies if relevant.
-    💡 Unique Value Proposition
-    Explain what sets you apart (e.g., turnaround time, visual storytelling skills, real-time collaboration, past results).
-    📞 Call to Action
-    End confidently with a clear invitation to discuss or next steps (“Let’s connect”, “Open to a brief chat?”).
-        
-    Guidelines:
-    - Keep the tone professional yet conversational
-    - Focus on the client's needs and desired outcomes
-    - Highlight unique selling points
-    - Include specific examples of relevant past work
-    - Maintain a confident but not arrogant tone
-    - Keep the length between 200-300 words
-    - Must be original, highly specific, and tailored to the job
-    - Avoid any vague or templated language
-    - Include brief examples or links if relevant to add credibility
-    -Include brief examples or links if relevant to add credibility
-    -Ensure the tone is confident, never arrogant
-    - Make it personalized and avoid generic templates
-    - A light P.S. for extra warmth
-    
-    📬 Output Format:
-    - Return a fully written proposal formatted with paragraph breaks, readable on all devices. Do not include commentary, headers, or instructions — only the proposal body.
-    """
-
+    You are a top-rated Upwork freelancer and expert copywriter with a strong track record of winning high-value freelance jobs.\nYour goal is to craft a powerful, personalized proposal for the following opportunity using persuasive storytelling, credibility, and client-focused messaging.\n    Context:\n    - Job Post: {job_post}\n    - Company: {company_name if company_name else 'Not specified'}\n    - Client Name: {client_name if client_name else 'Hiring Manager'}\n    - My Background: {resume_text if resume_text else 'Will be customized based on relevant experience'}\n    {milestone_instructions}\n    - The proposal should always start after the greeting with: 'I am Usman Hassan.' For example: 'Hi {client_name if client_name else 'there'},\nI am Usman Hassan.'\n    📝 Proposal Structure:\n    Your response should follow this structure:\n    🔥 Hook / Introduction\n    Open with a powerful sentence that immediately shows understanding of the client's problem and goals.\n    ✅ Demonstrated Expertise\n    Share specific skills, projects, and experience relevant to the job (use bullet points sparingly for clarity).\n    🎯 Targeted Fit & Alignment\n    Address specific job requirements and how your expertise will solve them — mention tools, technologies, or strategies if relevant.\n    💡 Unique Value Proposition\n    Explain what sets you apart (e.g., turnaround time, visual storytelling skills, real-time collaboration, past results).\n    📞 Call to Action\n    End confidently with a clear invitation to discuss or next steps (\"Let's connect\", \"Open to a brief chat?\").\n        \n    Guidelines:\n    - Keep the tone professional yet conversational\n    - Focus on the client's needs and desired outcomes\n    - Highlight unique selling points\n    - Include specific examples of relevant past work\n    - Maintain a confident but not arrogant tone\n    - Must be original, highly specific, and tailored to the job\n    - Avoid any vague or templated language\n    - Include brief examples or links if relevant to add credibility\n    -Include brief examples or links if relevant to add credibility\n    -Ensure the tone is confident, never arrogant\n    - Make it personalized and avoid generic templates\n    - A light P.S. for extra warmth\n    \n    📬 Output Format:\n    - Return a fully written proposal formatted with paragraph breaks, readable on all devices. Do not include commentary, headers, or instructions — only the proposal body.\n    """
     try:
-        # Generate the proposal using Gemini
         response = model.generate_content(prompt)
-
-        # Extract and return the generated text
         return response.text
     except Exception as e:
         return f"Error generating proposal: {str(e)}"
 
-def cold_email_generator(job_post, company_name, client_name, uploaded_file):
-    # Extract resume text if uploaded
+def cold_email_generator(job_post, company_name, client_name, uploaded_file, is_milestone, project_amount=None):
     resume_text = load_resume(uploaded_file)
-
-    # Craft the strategic prompt for a follow-up email
+    milestone_instructions = ""
+    if is_milestone == "Yes":
+        milestone_instructions = f"""
+        \n\n---\n### Project Milestones\nBriefly mention in your follow-up email that you can provide a milestone plan and are happy to discuss it.\n- The total project budget is ${project_amount if project_amount else '[not specified]'}\n---\n"""
     prompt = f"""
-   You are an expert B2B email copywriter with proven experience crafting high-converting, concise, and personalized follow-up emails.
-    Objective: Write a polished, professional follow-up email to a potential client after submitting a proposal for the following freelance opportunity on Upwork.
-    Context:
-    - Job/Opportunity Details: {job_post}
-    - Target Company: {company_name if company_name else 'Not specified'}
-    - Client's Name: {client_name if client_name else 'Hiring Manager'}
-    - My Background: {resume_text if resume_text else 'Will be customized based on relevant experience'}
-    Please create a complete follow-up email that includes:
-    1. A polite,Warm personalized greeting
-    2. A brief and quick reference to the original proposal and job post
-    3. A short, value-focused reminder of why I'm a great fit.Also gentle question or CTA to invite response (e.g., “Would you like to connect for a quick chat?”)
-    4. A gentle nudge or question to encourage a response (e.g., "Do you have any questions?" or "Would you like to discuss further?")
-    5. A professional closing and signature
-    Email Guidelines:
-    - Keep the total email under 120 words (excluding signature)
-    - Be polite, professional, and respectful of the client's time
-    - Avoid sounding pushy or desperate
-    - Use natural language — not overly formal or robotic
-    - Avoid any tone that feels salesy, desperate, or intrusive
-    - Ensure clear formatting, mobile readability, and zero grammatical or spelling issues
-    - Personalization is key — reflect awareness of the project/client needs.
-    - A light P.S. for extra warmth
-    
-    Return a fully written follow-up email, formatted and ready to send, with no additional explanations. Use paragraph breaks for clarity.
-    """
-
+   You are an expert B2B email copywriter with proven experience crafting high-converting, concise, and personalized follow-up emails.\n    Objective: Write a polished, professional follow-up email to a potential client after submitting a proposal for the following freelance opportunity on Upwork.\n    Context:\n    - Job/Opportunity Details: {job_post}\n    - Target Company: {company_name if company_name else 'Not specified'}\n    - Client's Name: {client_name if client_name else 'Hiring Manager'}\n    - My Background: {resume_text if resume_text else 'Will be customized based on relevant experience'}\n    {milestone_instructions}\n    Please create a complete follow-up email that includes:\n    1. A polite,Warm personalized greeting\n    2. A brief and quick reference to the original proposal and job post\n    3. A short, value-focused reminder of why I'm a great fit.Also gentle question or CTA to invite response (e.g., \"Would you like to connect for a quick chat?\")\n    4. A gentle nudge or question to encourage a response (e.g., \"Do you have any questions?\" or \"Would you like to discuss further?\")\n    5. A professional closing and signature\n    Email Guidelines:\n    - Be polite, professional, and respectful of the client's time\n    - Avoid sounding pushy or desperate\n    - Use natural language — not overly formal or robotic\n    - Avoid any tone that feels salesy, desperate, or intrusive\n    - Ensure clear formatting, mobile readability, and zero grammatical or spelling issues\n    - Personalization is key — reflect awareness of the project/client needs.\n    - A light P.S. for extra warmth\n    \n    Return a fully written follow-up email, formatted and ready to send, with no additional explanations. Use paragraph breaks for clarity.\n    """
     try:
-        # Generate the follow-up email using Gemini
         response = model.generate_content(prompt)
         return response.text
     except Exception as e:
@@ -239,10 +173,16 @@ def main():
     ''', unsafe_allow_html=True)
 
     # Selection box for content type
-    st.sidebar.selectbox('What would you like to generate?:', ['📝 Killing Proposal', '✉️ Highly Converting Email Content'], key='level')
+    content_type = st.sidebar.selectbox('What would you like to generate?:', ['📝 Killing Proposal', '✉️ Highly Converting Email Content'], key='level')
+
+    # Milestone selection
+    is_milestone = st.sidebar.radio("Is this project based on milestones?", ("No", "Yes"))
+    project_amount = None
+    if is_milestone == "Yes":
+        project_amount = st.sidebar.number_input("Total Project Amount ($)", min_value=1.0, step=1.0, format="%.2f")
 
     # Display tips based on selection
-    display_conversion_tips()
+    # display_conversion_tips()
 
     # Inputs
     col1, col2 = st.columns(2)
@@ -256,19 +196,19 @@ def main():
 
     # Generate Button
     if st.sidebar.button("✨ Generate", type="primary"):
-        if st.session_state.level == '📝 Killing Proposal':
-            response = proposal_generator(job_post, company_name, client_name, uploaded_file)
+        if content_type == '📝 Killing Proposal':
+            response = proposal_generator(job_post, company_name, client_name, uploaded_file, is_milestone, project_amount)
             st.session_state.generated_content = response
             st.session_state.generated_type = 'Proposal'
         else:
-            response = cold_email_generator(job_post, company_name, client_name, uploaded_file)
+            response = cold_email_generator(job_post, company_name, client_name, uploaded_file, is_milestone, project_amount)
             st.session_state.generated_content = response
             st.session_state.generated_type = 'Cold Email'
 
         # Add to history
         timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         st.session_state.history.append({
-            "type": st.session_state.level,
+            "type": content_type,
             "content": response,
             "timestamp": timestamp
         })
@@ -278,7 +218,20 @@ def main():
         if 'generated_content' in st.session_state:
             st.markdown(f"### Your Generated {st.session_state.get('generated_type', 'Content')}")
             with st.container(border=True, height=660):
-                st.write(st.session_state.generated_content)
+                # Split milestone section if present
+                content = st.session_state.generated_content
+                if '### Project Milestones' in content:
+                    main_part, milestone_part = content.split('### Project Milestones', 1)
+                    st.write(main_part.strip())
+                    with st.expander('Project Milestones'):
+                        milestone_text = '### Project Milestones' + milestone_part
+                        # Try to render as markdown table if present
+                        if '|' in milestone_text and '-' in milestone_text:
+                            st.markdown(milestone_text, unsafe_allow_html=True)
+                        else:
+                            st.write(milestone_text)
+                else:
+                    st.write(content)
 
     with col2:
         st.markdown("### 💬 Chat Proposal")
@@ -305,7 +258,7 @@ def main():
                 else:
                     st.markdown(f'''
                         <div class=\"assistant-message\">\n                            <div class=\"message-content assistant-content\">{message}</div>\n                        </div>\n                    ''', unsafe_allow_html=True)
-            # Place chat input always at the bottom
+            # Place chat input directly below the chat container
             prompt = st.chat_input("Ask a follow-up question or respond as the client:")
             if prompt:
                 st.markdown(f'''
@@ -320,7 +273,7 @@ def main():
                             response_text += chunk.strip() + ('. ' if not chunk.strip().endswith('.') else ' ')
                             response_container.markdown(f'''
                                 <div class=\"assistant-message\">\n       <div class=\"message-content assistant-content\">{response_text}</div>\n                            </div>\n                        ''', unsafe_allow_html=True)
-                            time.sleep(0.01)
+                            time.sleep(0.003)
                     st.session_state.chat_history.append(("Usman Hassan (AI)", response_text.strip()))
 
 if __name__ == "__main__":
